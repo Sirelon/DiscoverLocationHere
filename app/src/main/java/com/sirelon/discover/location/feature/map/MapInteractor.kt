@@ -1,4 +1,4 @@
-package com.sirelon.discover.location.feature.base.map
+package com.sirelon.discover.location.feature.map
 
 import android.app.Activity
 import androidx.fragment.app.Fragment
@@ -24,5 +24,8 @@ interface MapInteractor {
      */
     fun release()
 
+    /**
+     * Show map with passed coordinates
+     */
     fun showLocation(latitude: Double, longitude: Double)
 }

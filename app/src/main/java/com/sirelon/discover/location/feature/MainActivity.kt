@@ -1,4 +1,4 @@
-package com.sirelon.discover.location
+package com.sirelon.discover.location.feature
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -8,9 +8,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
-import com.sirelon.discover.location.feature.base.LocationListener
-import com.sirelon.discover.location.feature.base.map.GoogleMapInteractor
-import com.sirelon.discover.location.feature.base.map.MapInteractor
+import com.sirelon.discover.location.R
+import com.sirelon.discover.location.feature.location.LocationListener
+import com.sirelon.discover.location.feature.map.GoogleMapInteractor
+import com.sirelon.discover.location.feature.map.MapInteractor
 import kotlinx.android.synthetic.main.activity_main.*
 
 private const val LOCATION_REQUEST_CODE = 121
@@ -18,7 +19,8 @@ private const val LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION
 
 class MainActivity : AppCompatActivity() {
 
-    private val mapInteractor: MapInteractor = GoogleMapInteractor()
+    private val mapInteractor: MapInteractor =
+        GoogleMapInteractor()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +37,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onLocationPermissionDenied() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, LOCATION_PERMISSION)) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                                                                LOCATION_PERMISSION
+            )) {
             // Provide an additional rationale to the user if the permission was not granted
             // and the user would benefit from additional context for the use of the permission.
             // For example if the user has previously denied the permission.
@@ -53,7 +57,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestLocationPermission() {
-        ActivityCompat.requestPermissions(this, arrayOf(LOCATION_PERMISSION), LOCATION_REQUEST_CODE)
+        ActivityCompat.requestPermissions(this, arrayOf(LOCATION_PERMISSION),
+                                          LOCATION_REQUEST_CODE
+        )
     }
 
     override fun onRequestPermissionsResult(
@@ -82,9 +88,10 @@ class MainActivity : AppCompatActivity() {
         // TODO
         mapInteractor.onLocationPermissionGranted()
 
-        val locationListener = LocationListener(this) {
-            mapInteractor.showLocation(it.latitude, it.longitude)
-        }
+        val locationListener =
+            LocationListener(this) {
+                mapInteractor.showLocation(it.latitude, it.longitude)
+            }
         lifecycle.addObserver(locationListener)
     }
 
