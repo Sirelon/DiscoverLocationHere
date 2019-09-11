@@ -6,7 +6,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
+import com.sirelon.discover.location.feature.base.map.GoogleMapInteractor
 import kotlinx.android.synthetic.main.activity_main.*
 
 private const val LOCATION_REQUEST_CODE = 121
@@ -14,15 +16,15 @@ private const val LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION
 
 class MainActivity : AppCompatActivity() {
 
+    private val mapInteractor: GoogleMapInteractor = GoogleMapInteractor()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val mapFragment = mapInteractor.initWithActivity(this)
+        replaceFragment(mapFragment)
 
-        if (ContextCompat.checkSelfPermission(
-                this,
-                LOCATION_PERMISSION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+        if (isLocationGranted()) {
             onLocationPermissionGranted()
         } else {
             // Show rationale and request permission.
@@ -68,7 +70,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun isLocationGranted() =
+        ContextCompat.checkSelfPermission(
+            this,
+            LOCATION_PERMISSION
+        ) == PackageManager.PERMISSION_GRANTED
+
     private fun onLocationPermissionGranted() {
         // TODO
+        mapInteractor.onLocationPermissionGranted()
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit()
     }
 }
