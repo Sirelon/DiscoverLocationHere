@@ -8,7 +8,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
+import com.sirelon.discover.location.feature.base.LocationListener
 import com.sirelon.discover.location.feature.base.map.GoogleMapInteractor
+import com.sirelon.discover.location.feature.base.map.MapInteractor
 import kotlinx.android.synthetic.main.activity_main.*
 
 private const val LOCATION_REQUEST_CODE = 121
@@ -16,7 +18,7 @@ private const val LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION
 
 class MainActivity : AppCompatActivity() {
 
-    private val mapInteractor: GoogleMapInteractor = GoogleMapInteractor()
+    private val mapInteractor: MapInteractor = GoogleMapInteractor()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +81,11 @@ class MainActivity : AppCompatActivity() {
     private fun onLocationPermissionGranted() {
         // TODO
         mapInteractor.onLocationPermissionGranted()
+
+        val locationListener = LocationListener(this) {
+            mapInteractor.showLocation(it.latitude, it.longitude)
+        }
+        lifecycle.addObserver(locationListener)
     }
 
     private fun replaceFragment(fragment: Fragment) {

@@ -14,10 +14,15 @@ import com.google.android.gms.maps.model.MarkerOptions
  *
  * Created on 2019-09-11 21:31 for DiscoverLocationHere.
  */
+private const val DEFAULT_ZOOM = 9.0F
+
 class GoogleMapInteractor : OnMapReadyCallback, MapInteractor {
 
     private val mapFragment = SupportMapFragment.newInstance()
     private var googleMap: GoogleMap? = null
+
+    // In case when onLocationPermissionGranted method called before google map initialized
+    private var postponedLocationEnabled = false
 
     override fun initWithActivity(activity: Activity): Fragment {
         mapFragment.getMapAsync(this)
@@ -25,8 +30,19 @@ class GoogleMapInteractor : OnMapReadyCallback, MapInteractor {
     }
 
     override fun onLocationPermissionGranted() {
+        if (googleMap == null) {
+            postponedLocationEnabled = true
+        }
         googleMap?.isMyLocationEnabled = true
         googleMap?.uiSettings?.isMyLocationButtonEnabled = true
+    }
+
+    override fun showLocation(latitude: Double, longitude: Double) {
+        googleMap?.moveCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                LatLng(latitude, longitude), DEFAULT_ZOOM
+            )
+        )
     }
 
     override fun release() {
@@ -42,5 +58,10 @@ class GoogleMapInteractor : OnMapReadyCallback, MapInteractor {
 
         googleMap?.uiSettings?.setAllGesturesEnabled(true)
         googleMap?.uiSettings?.isZoomControlsEnabled = true
+
+        if (postponedLocationEnabled) {
+            onLocationPermissionGranted()
+            postponedLocationEnabled = false
+        }
     }
 }

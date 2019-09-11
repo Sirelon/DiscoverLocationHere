@@ -23,4 +23,6 @@ interface MapInteractor {
      * Should be called when we are finish working with map.
      */
     fun release()
+
+    fun showLocation(latitude: Double, longitude: Double)
 }

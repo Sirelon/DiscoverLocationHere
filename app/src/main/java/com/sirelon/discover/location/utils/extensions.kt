@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -107,4 +108,8 @@ fun Activity.hideKeyboard() {
     val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(focus?.windowToken, 0)
     focus?.clearFocus()
+}
+
+fun Any?.logInfo(){
+    Log.i("Sirelon", "$this")
 }
