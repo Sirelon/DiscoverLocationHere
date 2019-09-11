@@ -1,0 +1,81 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.sirelon.discover.location"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.debug
+    }
+    buildTypes {
+        release {
+            release {
+                postprocessing {
+                    removeUnusedCode true
+                    removeUnusedResources true
+                    obfuscate true
+                    optimizeCode true
+                    proguardFile 'proguard-rules.pro'
+                }
+            }
+        }
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+androidExtensions {
+    experimental = true
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    def corounitesVer = '1.3.0'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$corounitesVer"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$corounitesVer"
+
+    // Arch Components
+    // Lifecycle
+    def lifeCycleVer = "2.2.0-alpha04"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifeCycleVer"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifeCycleVer"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifeCycleVer"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifeCycleVer"
+
+    // Parsing
+    implementation 'com.google.code.gson:gson:2.8.5'
+    // Networking
+    implementation "com.squareup.okhttp3:okhttp:4.1.1"
+    def retrofitVer = '2.6.1'
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVer"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVer"
+    implementation 'com.readystatesoftware.chuck:library:1.1.0'
+    // DI
+    def koinVer = '2.0.1'
+    implementation "org.koin:koin-android:$koinVer"
+    implementation "org.koin:koin-androidx-viewmodel:$koinVer"
+
+    // UI
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation "androidx.recyclerview:recyclerview:1.1.0-beta04"
+    implementation 'androidx.cardview:cardview:1.0.0'
+
+    // Utils
+    implementation 'androidx.core:core-ktx:1.1.0'
+
+    testImplementation 'junit:junit:4.12'
+
+}
