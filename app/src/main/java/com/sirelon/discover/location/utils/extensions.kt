@@ -117,5 +117,5 @@ fun Any?.logInfo() {
 }
 
 fun ImageView.loadUrl(url: String) {
-    Picasso.get().load(url).into(this)
+    ImageLoader.showImage(this, url)
 }

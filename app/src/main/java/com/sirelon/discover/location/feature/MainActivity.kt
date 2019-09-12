@@ -16,8 +16,8 @@ import com.sirelon.discover.location.feature.location.LocationListener
 import com.sirelon.discover.location.feature.map.GoogleMapInteractor
 import com.sirelon.discover.location.feature.map.MapInteractor
 import com.sirelon.discover.location.feature.places.categories.CategorySelectionDialog
-import com.sirelon.discover.location.feature.places.categories.ListOfPlaces
 import com.sirelon.discover.location.feature.places.categories.PlaceCategoryAdapter
+import com.sirelon.discover.location.feature.places.list.ListOfPlacesFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.places_categories_screen.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         actionShowAsList.setOnClickListener {
-            replaceFragment(ListOfPlaces(), true)
+            replaceFragment(ListOfPlacesFragment(), true)
         }
     }
 
