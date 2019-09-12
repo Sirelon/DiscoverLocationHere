@@ -45,9 +45,16 @@ class MapViewModule(private val categoriesRepository: CategoriesRepository) : Ba
         return categoriesLiveData.value?.find { it.id == id }
     }
 
-    fun addSelection(items: List<PlaceCategory>) {
+    fun changeSelection(parent: PlaceCategory, itemsToAdd: List<PlaceCategory>) {
+        // Items to be unselected
+        val unselectedList = parent.children?.subtract(itemsToAdd) ?: emptySet()
         // Merge current selected values with new set of them
-        val selectedCategories = items.toMutableSet() + (selectedItemsTrigger.value ?: emptySet())
+        val selectedCategories = itemsToAdd.toMutableSet() + (getSelectedItems() - unselectedList)
         selectedItemsTrigger.postValue(selectedCategories)
     }
+
+    /**
+     * returns all selected categories by user
+     */
+    fun getSelectedItems() = selectedItemsTrigger.value ?: emptySet()
 }

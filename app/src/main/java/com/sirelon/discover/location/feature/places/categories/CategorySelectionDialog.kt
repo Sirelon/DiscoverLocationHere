@@ -1,5 +1,6 @@
 package com.sirelon.discover.location.feature.places.categories
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -59,7 +60,7 @@ class CategorySelectionDialog : DialogFragment() {
             adapter = selectionAdapter
         }
 
-        // Should be AFTER setted adapter
+        // Should be AFTER set adapter
         val tracker = SelectionTracker.Builder<Long>(
             "categorySelection",
             categorySelectionList,
@@ -72,18 +73,19 @@ class CategorySelectionDialog : DialogFragment() {
 
         selectionAdapter.tracker = tracker
 
-        // Select First
-//        tracker.select(1L)
         val parentId =
             arguments?.getString(PLACE_CATEGORY_ID_ARG)!! // I want crash if such dialog is going to open incorrect
-        val placeCategory = viewModel.loadCategoryById(parentId)!!
+        val parentPlaceCategory = viewModel.loadCategoryById(parentId)!!
 
-        val title = "Categories from ${placeCategory.name}"
+        val title = "Categories from ${parentPlaceCategory.name}"
         selectionTitle.text = title
-        val categoriesChildren = placeCategory.children
+        val categoriesChildren = parentPlaceCategory.children
         selectionAdapter.submitList(categoriesChildren)
 
+        preselectItems(categoriesChildren, tracker)
+
         tracker.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
+            @SuppressLint("SetTextI18n")
             override fun onSelectionChanged() {
                 val sizeOfSelection = tracker.selection.size()
                 selectionTitle.text = "$title ($sizeOfSelection)"
@@ -92,7 +94,8 @@ class CategorySelectionDialog : DialogFragment() {
 
         actionConfirm.setOnClickListener {
             val selectedItems = tracker.selection.mapNotNull { categoriesChildren?.get(it.toInt()) }
-            viewModel.addSelection(selectedItems)
+            viewModel.changeSelection(parentPlaceCategory, selectedItems)
+
             // Bla
             dismiss()
         }
@@ -101,6 +104,22 @@ class CategorySelectionDialog : DialogFragment() {
             val selection = (0 until selectionAdapter.itemCount).map { it.toLong() }
 
             tracker.setItemsSelected(selection, true)
+        }
+    }
+
+    private fun preselectItems(
+        categoriesChildren: List<PlaceCategory>?,
+        tracker: SelectionTracker<Long>
+    ) {
+        val selectedItems = viewModel.getSelectedItems()
+        // Find already selected items and map them to List of ids
+        val alreadySelectedItems = categoriesChildren?.mapIndexedNotNull { index, placeCategory ->
+            if (selectedItems.contains(placeCategory)) index.toLong()
+            else null
+        }
+
+        if (alreadySelectedItems != null) {
+            tracker.setItemsSelected(alreadySelectedItems, true)
         }
     }
 
