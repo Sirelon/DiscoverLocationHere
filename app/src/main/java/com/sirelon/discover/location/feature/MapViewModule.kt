@@ -27,7 +27,7 @@ class MapViewModule(private val categoriesRepository: CategoriesRepository) : Ba
     val placesLiveData = selectedItemsTrigger.switchMap { selectedCategories ->
         liveData(safetyIOContext) {
             val location = locationTrigger.value
-            if (location != null) {
+            if (location != null && !selectedCategories.isNullOrEmpty()) {
                 val data = categoriesRepository.findPopularPlaces(location, selectedCategories)
                 emit(data)
             }
@@ -57,4 +57,8 @@ class MapViewModule(private val categoriesRepository: CategoriesRepository) : Ba
      * returns all selected categories by user
      */
     fun getSelectedItems() = selectedItemsTrigger.value ?: emptySet()
+
+    fun resestSelection() {
+        selectedItemsTrigger.postValue(null)
+    }
 }

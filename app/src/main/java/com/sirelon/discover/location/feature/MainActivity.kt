@@ -44,10 +44,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         val placesAdapter = PlaceCategoryAdapter {
-            if (it.children?.size ?: 0 > 1) {
+            val children = it.children ?: listOf(it)
+            if (children.size > 1) {
                 CategorySelectionDialog.getInstance(it).show(supportFragmentManager, "Selection")
             } else {
                 // No sense to show dialog only for one category
+                viewModel.changeSelection(it, children)
             }
         }
         with(categoriesList) {
@@ -62,6 +64,11 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.placesLiveData.observe(this) {
             mapInteractor.showMarkers(it)
+        }
+
+        actionResetAll.setOnClickListener {
+            mapInteractor.clearAllMarkers()
+            viewModel.resestSelection()
         }
     }
 

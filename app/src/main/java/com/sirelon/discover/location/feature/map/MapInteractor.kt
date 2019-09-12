@@ -34,4 +34,9 @@ interface MapInteractor {
      * Show places as markers on a map
      */
     fun showMarkers(list: List<Place>)
+
+    /**
+     * Clear all added markers from a map
+     */
+    fun clearAllMarkers()
 }

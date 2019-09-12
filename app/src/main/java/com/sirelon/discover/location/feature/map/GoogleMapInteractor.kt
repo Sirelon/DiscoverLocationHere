@@ -55,8 +55,8 @@ class GoogleMapInteractor : OnMapReadyCallback, MapInteractor {
     }
 
     override fun release() {
-        markerManager?.clearItems()
         googleMap?.clear()
+        markerManager?.clear()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -77,12 +77,18 @@ class GoogleMapInteractor : OnMapReadyCallback, MapInteractor {
     override fun showMarkers(list: List<Place>) {
         markerManager?.setPlacesMarkerList(list)
     }
+
+    override fun clearAllMarkers() {
+        markerManager?.clear()
+    }
 }
 
 private const val ZOOM_INCREMENT = 2.5f
 
 private class MarkerManager(context: Context, map: GoogleMap) :
     ClusterManager<PlaceClusterMarker>(context, map) {
+
+    private val markers = hashSetOf<PlaceClusterMarker>()
 
     init {
         map.setOnCameraIdleListener(this)
@@ -103,16 +109,56 @@ private class MarkerManager(context: Context, map: GoogleMap) :
         }
     }
 
+
+    fun clear() {
+        markers.clear()
+        clearItems()
+        cluster()
+    }
+
+
+    /**
+     * Funtion for set markers to map. It optimized to not add already markers which are already set
+     */
     fun setPlacesMarkerList(list: List<Place>) {
-        addItems(list.map { PlaceClusterMarker(it) })
+        val items = list.map { PlaceClusterMarker(it) }
+        if (markers.isEmpty()) {
+            addItems(items)
+            markers.addAll(items)
+        } else {
+            // get all items which is not contains already in a list
+            val itemsToAdd = items.filterNot { markers.contains(it) }
+
+            // Get all other items and remove markers
+            markers.subtract(itemsToAdd).forEach {
+                removeItem(it)
+            }
+            addItems(itemsToAdd)
+
+            markers.clear()
+            markers.addAll(items)
+        }
+
         cluster()
     }
 }
 
-private class PlaceClusterMarker(private val place: Place) : ClusterItem {
+// Override hashcode and equals, 'cause I use this class in hashSet, but I don't want to make this class as "data class", 'cause I need to check only id of the place
+private class PlaceClusterMarker(val place: Place) : ClusterItem {
     override fun getSnippet(): String? = null
 
     override fun getTitle() = place.title
 
     override fun getPosition() = LatLng(place.latitude, place.longtude)
+
+    override fun hashCode() = place.id.hashCode()
+
+    override fun equals(o: Any?): Boolean {
+        if (this === o) return true
+        if (o == null || javaClass != o.javaClass) return false
+
+        val marker = o as PlaceClusterMarker?
+
+        return place.id == marker?.place?.id
+    }
 }
