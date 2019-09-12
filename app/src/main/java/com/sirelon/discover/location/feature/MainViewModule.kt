@@ -5,19 +5,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import com.sirelon.discover.location.feature.base.BaseViewModel
-import com.sirelon.discover.location.feature.places.categories.CategoriesRepository
-import com.sirelon.discover.location.feature.places.categories.PlaceCategory
+import com.sirelon.discover.location.feature.places.PlacesRepository
+import com.sirelon.discover.location.feature.places.entites.PlaceCategory
 
 /**
  * Created on 2019-09-12 12:28 for DiscoverLocationHere.
  */
-class MapViewModule(private val categoriesRepository: CategoriesRepository) : BaseViewModel() {
+class MainViewModule(private val placesRepository: PlacesRepository) : BaseViewModel() {
 
     private val locationTrigger = MutableLiveData<Location>()
 
     val categoriesLiveData = locationTrigger.switchMap { location ->
         liveData(safetyIOContext) {
-            val data = categoriesRepository.loadCategories(location)
+            val data = placesRepository.loadCategories(location)
             emit(data)
         }
     }
@@ -28,8 +28,10 @@ class MapViewModule(private val categoriesRepository: CategoriesRepository) : Ba
         liveData(safetyIOContext) {
             val location = locationTrigger.value
             if (location != null && !selectedCategories.isNullOrEmpty()) {
-                val data = categoriesRepository.findPopularPlaces(location, selectedCategories)
+                val data = placesRepository.findPopularPlaces(location, selectedCategories)
                 emit(data)
+            } else {
+                emit(null)
             }
         }
     }

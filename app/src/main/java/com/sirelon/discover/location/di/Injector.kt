@@ -1,9 +1,9 @@
 package com.sirelon.discover.location.di
 
 import android.app.Application
-import com.sirelon.discover.location.feature.MapViewModule
-import com.sirelon.discover.location.feature.places.categories.CategoriesRepository
-import com.sirelon.discover.location.feature.places.categories.api.PlacesAPI
+import com.sirelon.discover.location.feature.MainViewModule
+import com.sirelon.discover.location.feature.places.PlacesRepository
+import com.sirelon.discover.location.feature.places.api.PlacesAPI
 
 import com.sirelon.discover.location.network.createSimpleRetrofit
 import org.koin.android.ext.koin.androidContext
@@ -41,8 +41,8 @@ object Injector {
 
         factory { get<Retrofit>().create(PlacesAPI::class.java) }
 
-        factory { CategoriesRepository(get()) }
+        factory { PlacesRepository(get()) }
 
-        viewModel { MapViewModule(get()) }
+        viewModel { MainViewModule(get()) }
     }
 }

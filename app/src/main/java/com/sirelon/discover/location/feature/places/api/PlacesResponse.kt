@@ -1,4 +1,4 @@
-package com.sirelon.discover.location.feature.places.categories.api
+package com.sirelon.discover.location.feature.places.api
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
@@ -26,7 +26,9 @@ data class PlaceItemResponse(
     @SerializedName("position")
     val position: List<Double>,
     @SerializedName("openingHours")
-    val openningHoursResponse: OpenningHoursResponse?
+    val openningHoursResponse: OpenningHoursResponse?,
+    @SerializedName("distance")
+    val distance: Double
 )
 
 data class OpenningHoursResponse(

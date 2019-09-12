@@ -1,4 +1,4 @@
-package com.sirelon.discover.location.feature.places.categories
+package com.sirelon.discover.location.feature.places.entites
 
 /**
  * Created on 2019-09-12 19:19 for DiscoverLocationHere.
@@ -9,5 +9,6 @@ data class Place(
     val imageUrl: String,
     val latitude: Double,
     val longtude: Double,
-    val isOpen: Boolean
+    val isOpen: Boolean,
+    val distance: Double
 )

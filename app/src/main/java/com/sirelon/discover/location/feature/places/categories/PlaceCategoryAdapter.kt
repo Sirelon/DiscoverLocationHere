@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
 import com.sirelon.discover.location.R
+import com.sirelon.discover.location.feature.places.entites.PlaceCategoryDiffCallback
+import com.sirelon.discover.location.feature.places.entites.PlaceCategory
 import com.sirelon.discover.location.utils.inflate
 import java.util.Random
 
@@ -30,7 +32,7 @@ class PlaceCategoryAdapter(val clickCallback: (placeCategory: PlaceCategory) -> 
         val viewHolder =
             PlaceCategoryViewHolder(parent.inflate(R.layout.place_category_item))
         val rnd = Random()
-        val color = Color.argb(200, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
+        val color = Color.argb(230, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
         viewHolder.itemView.setBackgroundColor(color)
 
         viewHolder.placeCategoryName.setTextColor(getContrastColor(color))

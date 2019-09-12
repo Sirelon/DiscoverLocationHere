@@ -16,6 +16,7 @@ import com.sirelon.discover.location.feature.location.LocationListener
 import com.sirelon.discover.location.feature.map.GoogleMapInteractor
 import com.sirelon.discover.location.feature.map.MapInteractor
 import com.sirelon.discover.location.feature.places.categories.CategorySelectionDialog
+import com.sirelon.discover.location.feature.places.categories.ListOfPlaces
 import com.sirelon.discover.location.feature.places.categories.PlaceCategoryAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.places_categories_screen.*
@@ -28,13 +29,13 @@ class MainActivity : AppCompatActivity() {
 
     private val mapInteractor: MapInteractor = GoogleMapInteractor()
 
-    private val viewModel by viewModel<MapViewModule>()
+    private val viewModel by viewModel<MainViewModule>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val mapFragment = mapInteractor.initWithActivity(this)
-        replaceFragment(mapFragment)
+        replaceFragment(mapFragment, false)
 
         if (isLocationGranted()) {
             onLocationPermissionGranted()
@@ -63,12 +64,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.placesLiveData.observe(this) {
-            mapInteractor.showMarkers(it)
+            it?.let { mapInteractor.showMarkers(it) }
         }
 
         actionResetAll.setOnClickListener {
             mapInteractor.clearAllMarkers()
             viewModel.resestSelection()
+        }
+
+        actionShowAsList.setOnClickListener {
+            replaceFragment(ListOfPlaces(), true)
         }
     }
 
@@ -136,7 +141,11 @@ class MainActivity : AppCompatActivity() {
         lifecycle.addObserver(locationListener)
     }
 
-    private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit()
+    private fun replaceFragment(fragment: Fragment, withBackStack: Boolean) {
+        supportFragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).apply {
+            if (withBackStack) {
+                addToBackStack(null)
+            }
+        }.commit()
     }
 }

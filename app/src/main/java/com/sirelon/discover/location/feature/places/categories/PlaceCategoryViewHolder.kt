@@ -5,6 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sirelon.discover.location.R
+import com.sirelon.discover.location.feature.places.entites.PlaceCategory
 import com.sirelon.discover.location.utils.loadUrl
 
 /**

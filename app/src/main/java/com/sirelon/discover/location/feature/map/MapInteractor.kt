@@ -2,7 +2,7 @@ package com.sirelon.discover.location.feature.map
 
 import android.app.Activity
 import androidx.fragment.app.Fragment
-import com.sirelon.discover.location.feature.places.categories.Place
+import com.sirelon.discover.location.feature.places.entites.Place
 
 /**
  * Created on 2019-09-11 21:40 for DiscoverLocationHere.

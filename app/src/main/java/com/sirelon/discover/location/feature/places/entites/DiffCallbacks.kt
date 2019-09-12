@@ -1,4 +1,4 @@
-package com.sirelon.discover.location.feature.places.categories
+package com.sirelon.discover.location.feature.places.entites
 
 import androidx.recyclerview.widget.DiffUtil
 
@@ -11,5 +11,14 @@ object PlaceCategoryDiffCallback : DiffUtil.ItemCallback<PlaceCategory>() {
         oldItem.id == newItem.id
 
     override fun areContentsTheSame(oldItem: PlaceCategory, newItem: PlaceCategory) =
+        oldItem == newItem
+}
+
+object PlaceDiffCallback : DiffUtil.ItemCallback<Place>() {
+
+    override fun areItemsTheSame(oldItem: Place, newItem: Place) =
+        oldItem.id == newItem.id
+
+    override fun areContentsTheSame(oldItem: Place, newItem: Place) =
         oldItem == newItem
 }

@@ -6,6 +6,8 @@ import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.ListAdapter
 import com.sirelon.discover.location.R
+import com.sirelon.discover.location.feature.places.entites.PlaceCategoryDiffCallback
+import com.sirelon.discover.location.feature.places.entites.PlaceCategory
 import com.sirelon.discover.location.utils.inflate
 
 /**

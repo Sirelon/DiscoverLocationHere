@@ -1,14 +1,16 @@
-package com.sirelon.discover.location.feature.places.categories
+package com.sirelon.discover.location.feature.places
 
 import android.location.Location
-import com.sirelon.discover.location.feature.places.categories.api.CategoryItemResponse
-import com.sirelon.discover.location.feature.places.categories.api.PlaceItemResponse
-import com.sirelon.discover.location.feature.places.categories.api.PlacesAPI
+import com.sirelon.discover.location.feature.places.api.CategoryItemResponse
+import com.sirelon.discover.location.feature.places.api.PlaceItemResponse
+import com.sirelon.discover.location.feature.places.api.PlacesAPI
+import com.sirelon.discover.location.feature.places.entites.Place
+import com.sirelon.discover.location.feature.places.entites.PlaceCategory
 
 /**
  * Created on 2019-09-12 11:06 for DiscoverLocationHere.
  */
-class CategoriesRepository(private val placesAPI: PlacesAPI) {
+class PlacesRepository(private val placesAPI: PlacesAPI) {
 
     /**
      * Load categories from network by location
@@ -57,14 +59,16 @@ class CategoriesRepository(private val placesAPI: PlacesAPI) {
             children = children?.map { it.mapToUi() })
     }
 
-    private fun PlaceItemResponse.mapToUi() = Place(
-        id,
-        title,
-        icon,
-        latitude = position.first(),
-        longtude = position.last(),
-        isOpen = openningHoursResponse?.isOpen == true
-    )
+    private fun PlaceItemResponse.mapToUi() =
+        Place(
+            id,
+            title,
+            icon,
+            latitude = position.first(),
+            longtude = position.last(),
+            isOpen = openningHoursResponse?.isOpen == true,
+            distance = distance
+        )
 }
 
 /**

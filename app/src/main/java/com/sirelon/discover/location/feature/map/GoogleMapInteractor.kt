@@ -12,7 +12,7 @@ import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import com.sirelon.discover.location.R
-import com.sirelon.discover.location.feature.places.categories.Place
+import com.sirelon.discover.location.feature.places.entites.Place
 
 /**
  * realization of MapInteractor, which use Google Maps

@@ -16,7 +16,8 @@ import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.sirelon.discover.location.feature.MapViewModule
+import com.sirelon.discover.location.feature.MainViewModule
+import com.sirelon.discover.location.feature.places.entites.PlaceCategory
 import kotlinx.android.synthetic.main.category_selection_screen.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -25,7 +26,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
  */
 class CategorySelectionDialog : DialogFragment() {
 
-    private val viewModel by sharedViewModel<MapViewModule>()
+    private val viewModel by sharedViewModel<MainViewModule>()
 
     companion object {
         private const val PLACE_CATEGORY_ID_ARG = ".placeCategoryIdArg"

@@ -1,4 +1,4 @@
-package com.sirelon.discover.location.feature.places.categories
+package com.sirelon.discover.location.feature.places.entites
 
 /**
  * Created on 2019-09-12 11:10 for DiscoverLocationHere.
