@@ -1,12 +1,13 @@
 package com.sirelon.discover.location.feature.places.categories
 
 import android.graphics.Color
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
 import com.sirelon.discover.location.R
-import com.sirelon.discover.location.feature.places.entites.PlaceCategoryDiffCallback
 import com.sirelon.discover.location.feature.places.entites.PlaceCategory
+import com.sirelon.discover.location.feature.places.entites.PlaceCategoryDiffCallback
 import com.sirelon.discover.location.utils.inflate
 import java.util.Random
 
@@ -15,9 +16,7 @@ import java.util.Random
  * Created on 2019-09-12 13:09 for DiscoverLocationHere.
  */
 class PlaceCategoryAdapter(val clickCallback: (placeCategory: PlaceCategory) -> Unit) :
-    ListAdapter<PlaceCategory, PlaceCategoryViewHolder>(
-        PlaceCategoryDiffCallback
-    ) {
+    ListAdapter<PlaceCategory, PlaceCategoryViewHolder>(PlaceCategoryDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceCategoryViewHolder {
         val slithyWhite = ContextCompat.getColor(parent.context, R.color.slithyWhite)
@@ -36,7 +35,8 @@ class PlaceCategoryAdapter(val clickCallback: (placeCategory: PlaceCategory) -> 
         viewHolder.itemView.setBackgroundColor(color)
 
         viewHolder.placeCategoryName.setTextColor(getContrastColor(color))
-
+        // Hide for now
+        viewHolder.itemView.findViewById<View>(R.id.badgeCounter).visibility = View.GONE
         return viewHolder
     }
 

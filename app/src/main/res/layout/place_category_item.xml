@@ -1,26 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:foreground="?attr/selectableItemBackgroundBorderless"
     android:clickable="true"
-    android:orientation="vertical"
-    android:padding="4dp">
+    android:foreground="?attr/selectableItemBackgroundBorderless">
 
     <ImageView
         android:id="@+id/placeCategoryIcon"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_width="55dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/placeCategoryName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/placeCategoryName"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="53dp"
+        android:layout_marginBottom="56dp"
         android:gravity="center"
         android:lines="2"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="@tools:sample/full_names" />
-</LinearLayout>
+
+    <TextView
+        android:id="@+id/badgeCounter"
+        style="@style/TextAppearance.AppCompat.Small.Inverse"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:background="@drawable/bg_badge"
+        android:gravity="center"
+        tools:text="12"
+        app:layout_constraintBottom_toTopOf="@+id/placeCategoryIcon"
+        app:layout_constraintEnd_toEndOf="@+id/placeCategoryIcon"
+        app:layout_constraintStart_toEndOf="@+id/placeCategoryIcon"
+        app:layout_constraintTop_toTopOf="@+id/placeCategoryIcon" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
