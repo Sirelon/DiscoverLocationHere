@@ -1,4 +1,4 @@
-package com.sirelon.discover.location.feature.places.categories
+package com.sirelon.discover.location.feature.places.categories.api
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName

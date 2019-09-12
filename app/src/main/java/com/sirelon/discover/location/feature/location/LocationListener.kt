@@ -9,7 +9,6 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.sirelon.discover.location.utils.logInfo
 import java.util.concurrent.TimeUnit
 
 /**
@@ -24,7 +23,6 @@ class LocationListener(context: Context, private val callback: (location: Locati
 
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult?) {
-            "FUSED LOCATION GET LOCATION $locationResult".logInfo()
             locationResult ?: return
             val location = locationResult.lastLocation
             callback(location)

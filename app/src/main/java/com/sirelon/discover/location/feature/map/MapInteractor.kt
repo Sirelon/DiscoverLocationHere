@@ -2,6 +2,7 @@ package com.sirelon.discover.location.feature.map
 
 import android.app.Activity
 import androidx.fragment.app.Fragment
+import com.sirelon.discover.location.feature.places.categories.Place
 
 /**
  * Created on 2019-09-11 21:40 for DiscoverLocationHere.
@@ -28,4 +29,9 @@ interface MapInteractor {
      * Show map with passed coordinates
      */
     fun showLocation(latitude: Double, longitude: Double)
+
+    /**
+     * Show places as markers on a map
+     */
+    fun showMarkers(list: List<Place>)
 }

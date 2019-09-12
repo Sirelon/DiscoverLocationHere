@@ -3,7 +3,7 @@ package com.sirelon.discover.location.di
 import android.app.Application
 import com.sirelon.discover.location.feature.MapViewModule
 import com.sirelon.discover.location.feature.places.categories.CategoriesRepository
-import com.sirelon.discover.location.feature.places.categories.PlacesAPI
+import com.sirelon.discover.location.feature.places.categories.api.PlacesAPI
 
 import com.sirelon.discover.location.network.createSimpleRetrofit
 import org.koin.android.ext.koin.androidContext

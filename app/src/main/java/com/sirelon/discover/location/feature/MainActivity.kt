@@ -3,18 +3,22 @@ package com.sirelon.discover.location.feature
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.sirelon.discover.location.R
 import com.sirelon.discover.location.feature.location.LocationListener
 import com.sirelon.discover.location.feature.map.GoogleMapInteractor
 import com.sirelon.discover.location.feature.map.MapInteractor
+import com.sirelon.discover.location.feature.places.categories.CategorySelectionDialog
+import com.sirelon.discover.location.feature.places.categories.PlaceCategoryAdapter
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.places_categories_screen.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val LOCATION_REQUEST_CODE = 121
@@ -22,10 +26,9 @@ private const val LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION
 
 class MainActivity : AppCompatActivity() {
 
-    private val mapInteractor: MapInteractor =
-        GoogleMapInteractor()
+    private val mapInteractor: MapInteractor = GoogleMapInteractor()
 
-    private val viewModule by viewModel<MapViewModule>()
+    private val viewModel by viewModel<MapViewModule>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,8 +43,25 @@ class MainActivity : AppCompatActivity() {
             onLocationPermissionDenied()
         }
 
-        viewModule.categoriesLiveData.observe(this) {
-            Log.d("Sirelon", "CATEGORIES are $it")
+        val placesAdapter = PlaceCategoryAdapter {
+            if (it.children?.size ?: 0 > 1) {
+                CategorySelectionDialog.getInstance(it).show(supportFragmentManager, "Selection")
+            } else {
+                // No sense to show dialog only for one category
+            }
+        }
+        with(categoriesList) {
+            itemAnimator = DefaultItemAnimator()
+            layoutManager = GridLayoutManager(context, 3)
+            adapter = placesAdapter
+        }
+
+        viewModel.categoriesLiveData.observe(this) {
+            placesAdapter.submitList(it)
+        }
+
+        viewModel.placesLiveData.observe(this){
+            mapInteractor.showMarkers(it)
         }
     }
 
@@ -103,7 +123,7 @@ class MainActivity : AppCompatActivity() {
         val locationListener =
             LocationListener(this) {
                 mapInteractor.showLocation(it.latitude, it.longitude)
-                viewModule.onLocationChange(it)
+                viewModel.onLocationChange(it)
             }
         lifecycle.addObserver(locationListener)
     }

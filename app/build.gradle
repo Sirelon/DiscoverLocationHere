@@ -67,16 +67,22 @@ dependencies {
     implementation "org.koin:koin-androidx-viewmodel:$koinVer"
 
     // UI
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    // Picasso here, instead of Glide, 'cause I need simple load and show image. Not needed for such small app fetch a huge Glide.
+    // But Glide better :)
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation "androidx.recyclerview:recyclerview:1.1.0-beta04"
+    implementation 'androidx.recyclerview:recyclerview-selection:1.0.0'
+
     implementation 'androidx.cardview:cardview:1.0.0'
 
     // Utils
     implementation 'androidx.core:core-ktx:1.1.0'
 
-    implementation 'com.google.android.gms:play-services-maps:16.1.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
     testImplementation 'junit:junit:4.12'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
 

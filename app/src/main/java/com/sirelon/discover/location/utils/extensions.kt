@@ -12,6 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.ImageView
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -110,6 +112,10 @@ fun Activity.hideKeyboard() {
     focus?.clearFocus()
 }
 
-fun Any?.logInfo(){
+fun Any?.logInfo() {
     Log.i("Sirelon", "$this")
+}
+
+fun ImageView.loadUrl(url: String) {
+    Picasso.get().load(url).into(this)
 }

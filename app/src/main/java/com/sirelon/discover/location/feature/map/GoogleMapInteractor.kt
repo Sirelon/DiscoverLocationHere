@@ -8,6 +8,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.sirelon.discover.location.R
+import com.sirelon.discover.location.feature.places.categories.Place
 
 /**
  * realization of MapInteractor, which use Google Maps
@@ -24,8 +26,11 @@ class GoogleMapInteractor : OnMapReadyCallback, MapInteractor {
     // In case when onLocationPermissionGranted method called before google map initialized
     private var postponedLocationEnabled = false
 
+    private var padding = 0
+
     override fun initWithActivity(activity: Activity): Fragment {
         mapFragment.getMapAsync(this)
+        padding = activity.resources.getDimensionPixelSize(R.dimen.peek_height) / 2
         return mapFragment
     }
 
@@ -51,17 +56,26 @@ class GoogleMapInteractor : OnMapReadyCallback, MapInteractor {
 
     override fun onMapReady(googleMap: GoogleMap?) {
         this.googleMap = googleMap
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        this.googleMap?.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        this.googleMap?.moveCamera(CameraUpdateFactory.newLatLng(sydney))
 
         googleMap?.uiSettings?.setAllGesturesEnabled(true)
         googleMap?.uiSettings?.isZoomControlsEnabled = true
 
+        googleMap?.setPadding(0, padding, 0, 0)
+
         if (postponedLocationEnabled) {
             onLocationPermissionGranted()
             postponedLocationEnabled = false
+        }
+    }
+
+    override fun showMarkers(list: List<Place>) {
+        val markers = list.map {
+            val position = LatLng(it.latitude, it.longtude)
+            MarkerOptions().position(position).title(it.title)
+        }
+
+        markers.forEach {
+            googleMap?.addMarker(it)
         }
     }
 }

@@ -1,6 +1,9 @@
 package com.sirelon.discover.location.feature.places.categories
 
 import android.location.Location
+import com.sirelon.discover.location.feature.places.categories.api.CategoryItemResponse
+import com.sirelon.discover.location.feature.places.categories.api.PlaceItemResponse
+import com.sirelon.discover.location.feature.places.categories.api.PlacesAPI
 
 /**
  * Created on 2019-09-12 11:06 for DiscoverLocationHere.
@@ -31,11 +34,19 @@ class CategoriesRepository(private val placesAPI: PlacesAPI) {
         }
 
         return uiItems
-//        val categoriesMap = categoriesResponse.groupBy { it.within.isEmpty() }
-//        val parentCategories = categoriesMap[true]?. // Categories without parent
+    }
 
-//        val children = categoriesMap[false]
+    suspend fun findPopularPlaces(
+        location: Location,
+        selectedCategories: Set<PlaceCategory>
+    ): List<Place> {
+        val response = placesAPI.findPopularPlaces(
+            location = location.toApiParameter(),
+            categories = selectedCategories.toApiParamter(),
+            size = 1000
+        )
 
+        return response.result.items.map { it.mapToUi() }
     }
 
     private fun CategoryItemResponse.mapToUi(children: Set<CategoryItemResponse>? = null): PlaceCategory {
@@ -45,9 +56,20 @@ class CategoriesRepository(private val placesAPI: PlacesAPI) {
             imageUrl = icon,
             children = children?.map { it.mapToUi() })
     }
+
+    private fun PlaceItemResponse.mapToUi() = Place(
+        id,
+        title,
+        icon,
+        latitude = position.first(),
+        longtude = position.last(),
+        isOpen = openningHoursResponse?.isOpen == true
+    )
 }
 
 /**
  * Just comma between lat and lng
  */
 fun Location.toApiParameter() = "$latitude,$longitude"
+
+fun Collection<PlaceCategory>.toApiParamter() = joinToString(",") { it.id }
