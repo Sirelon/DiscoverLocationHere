@@ -72,10 +72,25 @@ class MainActivity : AppCompatActivity() {
             viewModel.resestSelection()
         }
 
+
+        supportFragmentManager.addOnBackStackChangedListener {
+            if (currentFragmentIsList()) {
+                actionShowAsList.text = "Show as map"
+            } else {
+                actionShowAsList.text = "Show as list"
+            }
+        }
         actionShowAsList.setOnClickListener {
-            replaceFragment(ListOfPlacesFragment(), true)
+            if (currentFragmentIsList()) {
+                onBackPressed()
+            } else {
+                replaceFragment(ListOfPlacesFragment(), true)
+            }
         }
     }
+
+    private fun currentFragmentIsList() =
+        supportFragmentManager.findFragmentById(R.id.fragmentContainer) is ListOfPlacesFragment
 
     private fun onLocationPermissionDenied() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
@@ -129,13 +144,18 @@ class MainActivity : AppCompatActivity() {
         ) == PackageManager.PERMISSION_GRANTED
 
     private fun onLocationPermissionGranted() {
-        // TODO
         mapInteractor.onLocationPermissionGranted()
+
+        var shouldFollowUser = true
 
         val locationListener =
             LocationListener(this) {
-                // Uncomment if you want to follow by user
-//                mapInteractor.showLocation(it.latitude, it.longitude)
+
+                if (shouldFollowUser) {
+                    mapInteractor.showLocation(it.latitude, it.longitude)
+                    // Just once. If you want to follow user -- make it true
+                    shouldFollowUser = false
+                }
                 viewModel.onLocationChange(it)
             }
         lifecycle.addObserver(locationListener)
