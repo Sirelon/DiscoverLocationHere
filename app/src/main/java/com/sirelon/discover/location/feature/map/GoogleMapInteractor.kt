@@ -1,13 +1,16 @@
 package com.sirelon.discover.location.feature.map
 
 import android.app.Activity
+import android.content.Context
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.maps.android.clustering.ClusterItem
+import com.google.maps.android.clustering.ClusterManager
+import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import com.sirelon.discover.location.R
 import com.sirelon.discover.location.feature.places.categories.Place
 
@@ -22,6 +25,7 @@ class GoogleMapInteractor : OnMapReadyCallback, MapInteractor {
 
     private val mapFragment = SupportMapFragment.newInstance()
     private var googleMap: GoogleMap? = null
+    private var markerManager: MarkerManager? = null
 
     // In case when onLocationPermissionGranted method called before google map initialized
     private var postponedLocationEnabled = false
@@ -51,16 +55,18 @@ class GoogleMapInteractor : OnMapReadyCallback, MapInteractor {
     }
 
     override fun release() {
+        markerManager?.clearItems()
         googleMap?.clear()
     }
 
-    override fun onMapReady(googleMap: GoogleMap?) {
+    override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
+        this.markerManager = MarkerManager(mapFragment.requireContext(), googleMap)
 
-        googleMap?.uiSettings?.setAllGesturesEnabled(true)
-        googleMap?.uiSettings?.isZoomControlsEnabled = true
+        googleMap.uiSettings?.setAllGesturesEnabled(true)
+        googleMap.uiSettings?.isZoomControlsEnabled = true
 
-        googleMap?.setPadding(0, padding, 0, 0)
+        googleMap.setPadding(0, padding, 0, 0)
 
         if (postponedLocationEnabled) {
             onLocationPermissionGranted()
@@ -69,13 +75,44 @@ class GoogleMapInteractor : OnMapReadyCallback, MapInteractor {
     }
 
     override fun showMarkers(list: List<Place>) {
-        val markers = list.map {
-            val position = LatLng(it.latitude, it.longtude)
-            MarkerOptions().position(position).title(it.title)
-        }
+        markerManager?.setPlacesMarkerList(list)
+    }
+}
 
-        markers.forEach {
-            googleMap?.addMarker(it)
+private const val ZOOM_INCREMENT = 2.5f
+
+private class MarkerManager(context: Context, map: GoogleMap) :
+    ClusterManager<PlaceClusterMarker>(context, map) {
+
+    init {
+        map.setOnCameraIdleListener(this)
+        map.setOnMarkerClickListener(this)
+        map.setOnInfoWindowClickListener(this)
+        setOnClusterClickListener { cluster ->
+            val currentZoom = map.cameraPosition.zoom
+            map.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                    cluster.position,
+                    currentZoom + ZOOM_INCREMENT
+                )
+            )
+            true
+        }
+        renderer = object : DefaultClusterRenderer<PlaceClusterMarker>(context, map, this) {
+
         }
     }
+
+    fun setPlacesMarkerList(list: List<Place>) {
+        addItems(list.map { PlaceClusterMarker(it) })
+        cluster()
+    }
+}
+
+private class PlaceClusterMarker(private val place: Place) : ClusterItem {
+    override fun getSnippet(): String? = null
+
+    override fun getTitle() = place.title
+
+    override fun getPosition() = LatLng(place.latitude, place.longtude)
 }

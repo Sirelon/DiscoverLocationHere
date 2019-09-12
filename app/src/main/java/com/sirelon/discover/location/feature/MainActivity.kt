@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
             placesAdapter.submitList(it)
         }
 
-        viewModel.placesLiveData.observe(this){
+        viewModel.placesLiveData.observe(this) {
             mapInteractor.showMarkers(it)
         }
     }
@@ -122,7 +122,8 @@ class MainActivity : AppCompatActivity() {
 
         val locationListener =
             LocationListener(this) {
-                mapInteractor.showLocation(it.latitude, it.longitude)
+                // Uncomment if you want to follow by user
+//                mapInteractor.showLocation(it.latitude, it.longitude)
                 viewModel.onLocationChange(it)
             }
         lifecycle.addObserver(locationListener)
