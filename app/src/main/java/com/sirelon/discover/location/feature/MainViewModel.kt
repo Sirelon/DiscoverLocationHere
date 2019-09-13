@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
  *
  * Created on 2019-09-12 12:28 for DiscoverLocationHere.
  */
-class MainViewModule(
+class MainViewModel(
     // For load categories
     private val categoriesRepository: CategoriesRepository,
     // For load places

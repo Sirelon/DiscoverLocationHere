@@ -10,6 +10,8 @@ import androidx.annotation.DrawableRes
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Transformations.map
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
@@ -27,6 +29,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.places_categories_screen.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.text.Typography.section
 
 private const val LOCATION_REQUEST_CODE = 121
 private const val LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION
@@ -36,7 +39,7 @@ class MainActivity : BaseActivity() {
 
     private val mapInteractor by inject<MapInteractor>()
 
-    private val viewModel by viewModel<MainViewModule>()
+    private val viewModel by viewModel<MainViewModel>()
     private val colorUtils by inject<ColorUtils>()
 
     override fun onCreate(savedInstanceState: Bundle?) {

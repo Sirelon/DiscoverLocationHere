@@ -1,7 +1,7 @@
 package com.sirelon.discover.location.di
 
 import android.app.Application
-import com.sirelon.discover.location.feature.MainViewModule
+import com.sirelon.discover.location.feature.MainViewModel
 import com.sirelon.discover.location.feature.map.GoogleMapInteractor
 import com.sirelon.discover.location.feature.map.MapInteractor
 import com.sirelon.discover.location.feature.places.PopularPlacesRepository
@@ -52,6 +52,6 @@ object Injector {
         factory { PopularPlacesRepository(get()) }
         factory { CategoriesRepository(get()) }
 
-        viewModel { MainViewModule(get(), get()) }
+        viewModel { MainViewModel(get(), get()) }
     }
 }

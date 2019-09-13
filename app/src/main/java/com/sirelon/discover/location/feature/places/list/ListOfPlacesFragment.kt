@@ -10,7 +10,7 @@ import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sirelon.discover.location.R
-import com.sirelon.discover.location.feature.MainViewModule
+import com.sirelon.discover.location.feature.MainViewModel
 import kotlinx.android.synthetic.main.list_of_places_screen.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -19,7 +19,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
  */
 class ListOfPlacesFragment : Fragment(R.layout.list_of_places_screen) {
 
-    private val viewModel by sharedViewModel<MainViewModule>()
+    private val viewModel by sharedViewModel<MainViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
