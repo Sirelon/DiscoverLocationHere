@@ -146,7 +146,7 @@ class MainActivity : BaseActivity() {
             adapter = categoriesAdapter
         }
 
-        viewModel.categoriesLiveData.observe(this) {
+        viewModel.allCategoriesLiveData.observe(this) {
             if (it.isNullOrEmpty()) {
                 categoriesEmptyView.visibility = View.VISIBLE
             } else {

@@ -3,10 +3,13 @@ package com.sirelon.discover.location.feature
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
+import androidx.lifecycle.viewModelScope
 import com.sirelon.discover.location.feature.base.BaseViewModel
 import com.sirelon.discover.location.feature.location.Coordinates
 import com.sirelon.discover.location.feature.places.PlacesRepository
+import com.sirelon.discover.location.feature.places.entites.Place
 import com.sirelon.discover.location.feature.places.entites.PlaceCategory
+import kotlinx.coroutines.launch
 
 /**
  * Created on 2019-09-12 12:28 for DiscoverLocationHere.
@@ -15,56 +18,57 @@ class MainViewModule(private val placesRepository: PlacesRepository) : BaseViewM
 
     private val locationTrigger = MutableLiveData<Coordinates>()
 
-    val categoriesLiveData = locationTrigger.switchMap { location ->
+    val allCategoriesLiveData = locationTrigger.switchMap { location ->
         liveData(safetyIOContext) {
             val data = placesRepository.loadCategories(location)
             emit(data)
         }
     }
 
-    private val selectedItemsTrigger = MutableLiveData<Set<PlaceCategory>>()
+    val placesLiveData = MutableLiveData<List<Place>>()
 
-    val placesLiveData = selectedItemsTrigger.switchMap { selectedCategories ->
-        liveData(safetyIOContext) {
-            val location = locationTrigger.value
-            if (location != null && !selectedCategories.isNullOrEmpty()) {
-                val data = placesRepository.findPopularPlaces(location, selectedCategories)
-                emit(data)
-            } else {
-                emit(null)
-            }
-        }
-    }
-
-    init {
-
-    }
+    private var selectedCategories = mutableSetOf<PlaceCategory>()
 
     fun onLocationChange(location: Coordinates) {
         if (location != locationTrigger.value) {
+            locationTrigger.value = location
             // Trigger only if location was changed
-            locationTrigger.postValue(location)
+            loadPopularPlaces()
         }
     }
 
     fun loadCategoryById(id: String): PlaceCategory? {
-        return categoriesLiveData.value?.find { it.id == id }
+        return allCategoriesLiveData.value?.find { it.id == id }
     }
 
     fun changeSelection(parent: PlaceCategory, itemsToAdd: List<PlaceCategory>) {
         // Items to be unselected
         val unselectedList = parent.children?.subtract(itemsToAdd) ?: emptySet()
         // Merge current selected values with new set of them
-        val selectedCategories = itemsToAdd.toMutableSet() + (getSelectedItems() - unselectedList)
-        selectedItemsTrigger.postValue(selectedCategories)
+        selectedCategories.removeAll(unselectedList)
+        selectedCategories.addAll(itemsToAdd)
+        loadPopularPlaces()
     }
 
     /**
      * returns all selected categories by user
      */
-    fun getSelectedItems() = selectedItemsTrigger.value ?: emptySet()
+    fun getSelectedItems() = selectedCategories.toList()
 
     fun resestSelection() {
-        selectedItemsTrigger.postValue(null)
+        selectedCategories.clear()
+    }
+
+    /**
+     * Combine Latest ;)
+     */
+    private fun loadPopularPlaces() {
+        val coordinates = locationTrigger.value ?: return
+        if (selectedCategories.isEmpty()) return
+
+        viewModelScope.launch(safetyIOContext) {
+            val data = placesRepository.findPopularPlaces(coordinates, selectedCategories)
+            placesLiveData.postValue(data)
+        }
     }
 }
