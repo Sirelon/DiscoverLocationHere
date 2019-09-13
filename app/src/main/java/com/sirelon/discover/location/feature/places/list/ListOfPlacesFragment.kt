@@ -30,6 +30,11 @@ class ListOfPlacesFragment : BaseFragment(R.layout.list_of_places_screen) {
         }
 
         viewModel.placesLiveData.observe(this) {
+            if (it.isNullOrEmpty()) {
+                placesEmptyView.visibility = View.VISIBLE
+            } else {
+                placesEmptyView.visibility = View.GONE
+            }
             placesAdapter.submitList(it)
         }
     }

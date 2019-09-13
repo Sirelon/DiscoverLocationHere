@@ -35,6 +35,15 @@
         app:spanCount="3"
         tools:listitem="@layout/place_category_item" />
 
+    <TextView
+        android:id="@+id/categoriesEmptyView"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@color/slithyWhite"
+        android:text="Nothing here :( \n Maybe try to search in another place?" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

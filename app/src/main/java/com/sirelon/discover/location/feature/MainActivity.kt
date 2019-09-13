@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -23,6 +24,7 @@ import com.sirelon.discover.location.feature.places.categories.CategorySelection
 import com.sirelon.discover.location.feature.places.categories.PlaceCategoryAdapter
 import com.sirelon.discover.location.feature.places.list.ListOfPlacesFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.list_of_places_screen.*
 import kotlinx.android.synthetic.main.places_categories_screen.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -67,7 +69,14 @@ class MainActivity : AppCompatActivity() {
             adapter = placesAdapter
         }
 
-        viewModel.categoriesLiveData.observe(this, placesAdapter::submitList)
+        viewModel.categoriesLiveData.observe(this) {
+            if (it.isNullOrEmpty()) {
+                categoriesEmptyView.visibility = View.VISIBLE
+            } else {
+                categoriesEmptyView.visibility = View.GONE
+            }
+            placesAdapter.submitList(it)
+        }
 
         viewModel.placesLiveData.observe(this) {
             it?.let { mapInteractor.showMarkers(it) }
@@ -152,8 +161,8 @@ class MainActivity : AppCompatActivity() {
                     mapInteractor.showLocation(it.latitude, it.longitude)
                     // Just once. If you want to follow user -- make it true
                     shouldFollowUser = false
+                    viewModel.onLocationChange(Coordinates(it))
                 }
-                viewModel.onLocationChange(Coordinates(it))
             }
         lifecycle.addObserver(locationListener)
     }
