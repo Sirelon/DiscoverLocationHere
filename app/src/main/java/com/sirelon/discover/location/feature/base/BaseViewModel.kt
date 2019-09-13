@@ -6,6 +6,9 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import org.json.JSONObject
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 
 open class BaseViewModel : ViewModel() {
@@ -22,8 +25,10 @@ open class BaseViewModel : ViewModel() {
 
     fun onError(e: Throwable) {
         e.printStackTrace()
-        // Actually I would like to parse error in some util method, or somewhere in API class or repository, but this is simple project, right?
-        if (e is retrofit2.HttpException) {
+        if (isConnectionException(e)) {
+            errosLiveData.postValue(RuntimeException("No connection!"))
+        } else if (e is retrofit2.HttpException) {
+            // Actually I would like to parse error in some util method, or somewhere in API class or repository, but this is simple project, right?
             try {
                 val json = JSONObject(e.response()?.errorBody()?.string())
                 val message = json.getString("message")
@@ -40,4 +45,12 @@ open class BaseViewModel : ViewModel() {
         super.onCleared()
         job.cancel()
     }
+
+    private fun isConnectionException(exception: Throwable): Boolean {
+        val isConnectionException =
+            exception is ConnectException || exception is SocketTimeoutException || exception is UnknownHostException
+        return isConnectionException
+    }
 }
+
+

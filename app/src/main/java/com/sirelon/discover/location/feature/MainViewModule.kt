@@ -6,7 +6,7 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.sirelon.discover.location.feature.base.BaseViewModel
 import com.sirelon.discover.location.feature.location.Coordinates
-import com.sirelon.discover.location.feature.places.PlacesRepository
+import com.sirelon.discover.location.feature.places.PopularPlacesRepository
 import com.sirelon.discover.location.feature.places.categories.CategoriesRepository
 import com.sirelon.discover.location.feature.places.entites.Place
 import com.sirelon.discover.location.feature.places.entites.PlaceCategory
@@ -20,7 +20,7 @@ class MainViewModule(
     // For load categories
     private val categoriesRepository: CategoriesRepository,
     // For load places
-    private val placesRepository: PlacesRepository
+    private val popularPlacesRepository: PopularPlacesRepository
 ) : BaseViewModel() {
 
     private val locationTrigger = MutableLiveData<Coordinates>()
@@ -74,7 +74,7 @@ class MainViewModule(
         if (selectedCategories.isEmpty()) return
 
         viewModelScope.launch(safetyIOContext) {
-            val data = placesRepository.findPopularPlaces(coordinates, selectedCategories)
+            val data = popularPlacesRepository.findPopularPlaces(coordinates, selectedCategories)
             placesLiveData.postValue(data)
         }
     }

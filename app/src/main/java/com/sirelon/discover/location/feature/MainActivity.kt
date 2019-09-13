@@ -20,7 +20,7 @@ import com.sirelon.discover.location.feature.location.Coordinates
 import com.sirelon.discover.location.feature.location.LocationListener
 import com.sirelon.discover.location.feature.map.GoogleMapInteractor
 import com.sirelon.discover.location.feature.map.MapInteractor
-import com.sirelon.discover.location.feature.places.categories.CategorySelectionDialog
+import com.sirelon.discover.location.feature.places.categories.selection.CategorySelectionDialog
 import com.sirelon.discover.location.feature.places.categories.PlaceCategoryAdapter
 import com.sirelon.discover.location.feature.places.list.ListOfPlacesFragment
 import kotlinx.android.synthetic.main.activity_main.*

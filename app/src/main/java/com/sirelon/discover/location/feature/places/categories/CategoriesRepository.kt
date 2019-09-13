@@ -7,7 +7,7 @@ import com.sirelon.discover.location.feature.places.api.toApiParameter
 import com.sirelon.discover.location.feature.places.entites.PlaceCategory
 
 /**
- * Created on 2019-09-13 11:14 for DiscoverLocationHere.
+ *  In theory we can load categories from other source
  */
 class CategoriesRepository(private val placesAPI: PlacesAPI) {
 

@@ -1,4 +1,4 @@
-package com.sirelon.discover.location.feature.places.categories
+package com.sirelon.discover.location.feature.places.categories.selection
 
 import android.view.View
 import android.view.ViewGroup
@@ -6,6 +6,7 @@ import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.ListAdapter
 import com.sirelon.discover.location.R
+import com.sirelon.discover.location.feature.places.categories.PlaceCategoryViewHolder
 import com.sirelon.discover.location.feature.places.entites.PlaceCategoryDiffCallback
 import com.sirelon.discover.location.feature.places.entites.PlaceCategory
 import com.sirelon.discover.location.utils.inflate
@@ -25,7 +26,9 @@ class CategorySelectionAdapter :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        SelectionCategoryViewHolder((parent.inflate(R.layout.place_category_item_selection)))
+        SelectionCategoryViewHolder(
+            (parent.inflate(R.layout.place_category_item_selection))
+        )
 
     override fun onBindViewHolder(holder: SelectionCategoryViewHolder, position: Int) {
         holder.bind(getItem(position))

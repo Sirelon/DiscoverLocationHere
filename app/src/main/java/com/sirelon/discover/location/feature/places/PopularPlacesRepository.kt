@@ -11,7 +11,7 @@ import com.sirelon.discover.location.feature.places.entites.PlaceCategory
 /**
  * Created on 2019-09-12 11:06 for DiscoverLocationHere.
  */
-class PlacesRepository(private val placesAPI: PlacesAPI) {
+class PopularPlacesRepository(private val placesAPI: PlacesAPI) {
 
     suspend fun findPopularPlaces(
         coordinates: Coordinates,

@@ -1,4 +1,4 @@
-package com.sirelon.discover.location.feature.places.categories
+package com.sirelon.discover.location.feature.places.categories.selection
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -32,7 +32,8 @@ class CategorySelectionDialog : DialogFragment() {
         private const val PLACE_CATEGORY_ID_ARG = ".placeCategoryIdArg"
 
         fun getInstance(placeCategory: PlaceCategory): DialogFragment {
-            return CategorySelectionDialog().apply {
+            return CategorySelectionDialog()
+                .apply {
                 arguments = bundleOf(PLACE_CATEGORY_ID_ARG to placeCategory.id)
             }
         }
@@ -53,7 +54,8 @@ class CategorySelectionDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val selectionAdapter = CategorySelectionAdapter()
+        val selectionAdapter =
+            CategorySelectionAdapter()
 
         with(categorySelectionList) {
             itemAnimator = DefaultItemAnimator()
@@ -66,7 +68,9 @@ class CategorySelectionDialog : DialogFragment() {
             "categorySelection",
             categorySelectionList,
             StableIdKeyProvider(categorySelectionList),
-            CategorySelectionDetailsLookup(categorySelectionList),
+            CategorySelectionDetailsLookup(
+                categorySelectionList
+            ),
             StorageStrategy.createLongStorage()
         )
             .withSelectionPredicate(SelectionPredicates.createSelectAnything())

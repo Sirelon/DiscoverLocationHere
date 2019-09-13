@@ -2,7 +2,7 @@ package com.sirelon.discover.location.di
 
 import android.app.Application
 import com.sirelon.discover.location.feature.MainViewModule
-import com.sirelon.discover.location.feature.places.PlacesRepository
+import com.sirelon.discover.location.feature.places.PopularPlacesRepository
 import com.sirelon.discover.location.feature.places.api.PlacesAPI
 import com.sirelon.discover.location.feature.places.categories.CategoriesRepository
 
@@ -42,7 +42,7 @@ object Injector {
 
         factory { get<Retrofit>().create(PlacesAPI::class.java) }
 
-        factory { PlacesRepository(get()) }
+        factory { PopularPlacesRepository(get()) }
         factory { CategoriesRepository(get()) }
 
         viewModel { MainViewModule(get(), get()) }
