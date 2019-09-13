@@ -24,7 +24,6 @@ import com.sirelon.discover.location.feature.places.categories.CategorySelection
 import com.sirelon.discover.location.feature.places.categories.PlaceCategoryAdapter
 import com.sirelon.discover.location.feature.places.list.ListOfPlacesFragment
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.list_of_places_screen.*
 import kotlinx.android.synthetic.main.places_categories_screen.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -126,7 +125,8 @@ class MainActivity : AppCompatActivity() {
                 onBackPressed()
             } else {
                 // show list
-                replaceFragment(ListOfPlacesFragment(), true)
+                // I don't want to replace map fragment. Just Show List above map.
+                addFragment(ListOfPlacesFragment())
             }
         }
 
@@ -208,6 +208,13 @@ class MainActivity : AppCompatActivity() {
                 addToBackStack(null)
             }
         }.commit()
+    }
+
+    private fun addFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragmentContainer, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun currentFragmentIsList() =

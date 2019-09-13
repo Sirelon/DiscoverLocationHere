@@ -1,6 +1,9 @@
 package com.sirelon.discover.location.feature.places.list
 
 import android.os.Bundle
+import android.transition.Slide
+import android.transition.TransitionSet
+import android.view.Gravity
 import android.view.View
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -39,4 +42,13 @@ class ListOfPlacesFragment : BaseFragment(R.layout.list_of_places_screen) {
         }
     }
 
+    override fun getEnterTransition() = Slide(Gravity.BOTTOM)
+
+    // When NOT Popping the back stack
+    override fun getExitTransition() = Slide(Gravity.BOTTOM)
+
+    // When Popping the back stack
+    // Need to be TransitionSet from FRAMEWORK
+//    java.lang.ClassCastException: androidx.transition.TransitionSet cannot be cast to android.transition.Transition
+    override fun getReturnTransition() = TransitionSet().addTransition(Slide(Gravity.BOTTOM))
 }
