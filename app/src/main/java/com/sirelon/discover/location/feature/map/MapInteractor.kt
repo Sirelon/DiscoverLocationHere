@@ -2,6 +2,7 @@ package com.sirelon.discover.location.feature.map
 
 import android.app.Activity
 import androidx.fragment.app.Fragment
+import com.sirelon.discover.location.feature.location.Coordinates
 import com.sirelon.discover.location.feature.places.entites.Place
 
 /**
@@ -39,4 +40,9 @@ interface MapInteractor {
      * Clear all added markers from a map
      */
     fun clearAllMarkers()
+
+    /**
+     * return current position of map
+     */
+    fun getCurrentCoordinates(): Coordinates?
 }

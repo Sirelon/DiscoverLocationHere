@@ -1,6 +1,6 @@
 package com.sirelon.discover.location.feature.places
 
-import android.location.Location
+import com.sirelon.discover.location.feature.location.Coordinates
 import com.sirelon.discover.location.feature.places.api.CategoryItemResponse
 import com.sirelon.discover.location.feature.places.api.PlaceItemResponse
 import com.sirelon.discover.location.feature.places.api.PlacesAPI
@@ -15,8 +15,8 @@ class PlacesRepository(private val placesAPI: PlacesAPI) {
     /**
      * Load categories from network by location
      */
-    suspend fun loadCategories(location: Location): List<PlaceCategory> {
-        val response = placesAPI.loadCategories(location.toApiParameter())
+    suspend fun loadCategories(coordinates: Coordinates): List<PlaceCategory> {
+        val response = placesAPI.loadCategories(coordinates.toApiParameter())
         val categoriesResponse = response.categories
 
         val map = mutableMapOf<String, MutableSet<CategoryItemResponse>>()
@@ -39,11 +39,11 @@ class PlacesRepository(private val placesAPI: PlacesAPI) {
     }
 
     suspend fun findPopularPlaces(
-        location: Location,
+        coordinates: Coordinates,
         selectedCategories: Set<PlaceCategory>
     ): List<Place> {
         val response = placesAPI.findPopularPlaces(
-            location = location.toApiParameter(),
+            location = coordinates.toApiParameter(),
             categories = selectedCategories.toApiParamter(),
             size = 1000
         )
@@ -74,6 +74,10 @@ class PlacesRepository(private val placesAPI: PlacesAPI) {
 /**
  * Just comma between lat and lng
  */
-fun Location.toApiParameter() = "$latitude,$longitude"
+fun Coordinates.toApiParameter() = "$latitude,$longitude"
 
+
+/**
+ * Just comma between id
+ */
 fun Collection<PlaceCategory>.toApiParamter() = joinToString(",") { it.id }

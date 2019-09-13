@@ -35,11 +35,29 @@
         app:spanCount="3"
         tools:listitem="@layout/place_category_item" />
 
-    <Button
-        android:id="@+id/actionResetAll"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:alpha="0.7"
-        android:text="Reset all" />
+        android:paddingHorizontal="@dimen/activity_horizontal_margin">
+
+        <Button
+            android:id="@+id/actionResetAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:alpha="0.7"
+            android:text="Reset all" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/actionSearchHere"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Search here" />
+    </LinearLayout>
 </LinearLayout>

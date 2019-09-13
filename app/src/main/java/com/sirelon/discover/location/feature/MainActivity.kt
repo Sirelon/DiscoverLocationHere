@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.sirelon.discover.location.R
+import com.sirelon.discover.location.feature.location.Coordinates
 import com.sirelon.discover.location.feature.location.LocationListener
 import com.sirelon.discover.location.feature.map.GoogleMapInteractor
 import com.sirelon.discover.location.feature.map.MapInteractor
@@ -77,6 +78,11 @@ class MainActivity : AppCompatActivity() {
             viewModel.resestSelection()
         }
 
+        actionSearchHere.setOnClickListener {
+            // Get current position of map and trigger view model to refresh categories and places
+            mapInteractor.getCurrentCoordinates()?.let { viewModel.onLocationChange(it) }
+        }
+
         supportFragmentManager.addOnBackStackChangedListener {
             // Update toolbar menu each time, when we change fragment
             invalidateOptionsMenu()
@@ -89,6 +95,7 @@ class MainActivity : AppCompatActivity() {
         val title: String
         @DrawableRes
         val icon: Int
+        // Depends on which screen visible righ now - change item title and item icon
         if (currentFragmentIsList()) {
             title = "Show as map"
             icon = R.drawable.ic_map
@@ -117,8 +124,39 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun currentFragmentIsList() =
-        supportFragmentManager.findFragmentById(R.id.fragmentContainer) is ListOfPlacesFragment
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == LOCATION_REQUEST_CODE) {
+            val indexOfLocationPermission =
+                permissions.indexOfFirst { it == LOCATION_PERMISSION }
+            if (grantResults[indexOfLocationPermission] == PackageManager.PERMISSION_GRANTED) {
+                onLocationPermissionGranted()
+            } else {
+                onLocationPermissionDenied()
+            }
+        }
+    }
+
+    private fun onLocationPermissionGranted() {
+        mapInteractor.onLocationPermissionGranted()
+
+        var shouldFollowUser = true
+
+        val locationListener =
+            LocationListener(this) {
+
+                if (shouldFollowUser) {
+                    mapInteractor.showLocation(it.latitude, it.longitude)
+                    // Just once. If you want to follow user -- make it true
+                    shouldFollowUser = false
+                }
+                viewModel.onLocationChange(Coordinates(it))
+            }
+        lifecycle.addObserver(locationListener)
+    }
 
     private fun onLocationPermissionDenied() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
@@ -149,45 +187,11 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == LOCATION_REQUEST_CODE) {
-            val indexOfLocationPermission =
-                permissions.indexOfFirst { it == LOCATION_PERMISSION }
-            if (grantResults[indexOfLocationPermission] == PackageManager.PERMISSION_GRANTED) {
-                onLocationPermissionGranted()
-            } else {
-                onLocationPermissionDenied()
-            }
-        }
-    }
-
     private fun isLocationGranted() =
         ContextCompat.checkSelfPermission(
             this,
             LOCATION_PERMISSION
         ) == PackageManager.PERMISSION_GRANTED
-
-    private fun onLocationPermissionGranted() {
-        mapInteractor.onLocationPermissionGranted()
-
-        var shouldFollowUser = true
-
-        val locationListener =
-            LocationListener(this) {
-
-                if (shouldFollowUser) {
-                    mapInteractor.showLocation(it.latitude, it.longitude)
-                    // Just once. If you want to follow user -- make it true
-                    shouldFollowUser = false
-                }
-                viewModel.onLocationChange(it)
-            }
-        lifecycle.addObserver(locationListener)
-    }
 
     private fun replaceFragment(fragment: Fragment, withBackStack: Boolean) {
         supportFragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).apply {
@@ -196,4 +200,8 @@ class MainActivity : AppCompatActivity() {
             }
         }.commit()
     }
+
+    private fun currentFragmentIsList() =
+        supportFragmentManager.findFragmentById(R.id.fragmentContainer) is ListOfPlacesFragment
+
 }

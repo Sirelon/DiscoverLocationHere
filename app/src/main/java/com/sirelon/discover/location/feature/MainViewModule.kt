@@ -1,10 +1,10 @@
 package com.sirelon.discover.location.feature
 
-import android.location.Location
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import com.sirelon.discover.location.feature.base.BaseViewModel
+import com.sirelon.discover.location.feature.location.Coordinates
 import com.sirelon.discover.location.feature.places.PlacesRepository
 import com.sirelon.discover.location.feature.places.entites.PlaceCategory
 
@@ -13,7 +13,7 @@ import com.sirelon.discover.location.feature.places.entites.PlaceCategory
  */
 class MainViewModule(private val placesRepository: PlacesRepository) : BaseViewModel() {
 
-    private val locationTrigger = MutableLiveData<Location>()
+    private val locationTrigger = MutableLiveData<Coordinates>()
 
     val categoriesLiveData = locationTrigger.switchMap { location ->
         liveData(safetyIOContext) {
@@ -36,7 +36,11 @@ class MainViewModule(private val placesRepository: PlacesRepository) : BaseViewM
         }
     }
 
-    fun onLocationChange(location: Location) {
+    init {
+
+    }
+
+    fun onLocationChange(location: Coordinates) {
         if (location != locationTrigger.value) {
             // Trigger only if location was changed
             locationTrigger.postValue(location)

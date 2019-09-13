@@ -7,6 +7,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.sirelon.discover.location.feature.location.Coordinates
 import com.sirelon.discover.location.feature.places.entites.Place
 
 /**
@@ -58,6 +59,7 @@ class GoogleMapInteractor : OnMapReadyCallback, MapInteractor {
         googleMap.uiSettings?.setAllGesturesEnabled(true)
         googleMap.uiSettings?.isZoomControlsEnabled = true
 
+
         if (postponedLocationEnabled) {
             onLocationPermissionGranted()
             postponedLocationEnabled = false
@@ -70,5 +72,12 @@ class GoogleMapInteractor : OnMapReadyCallback, MapInteractor {
 
     override fun clearAllMarkers() {
         markerManager?.clear()
+    }
+
+    override fun getCurrentCoordinates(): Coordinates? {
+        val latLng = googleMap?.cameraPosition?.target
+        latLng ?: return null
+
+        return Coordinates(latitude = latLng.latitude, longitude = latLng.longitude)
     }
 }
