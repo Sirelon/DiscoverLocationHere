@@ -2,11 +2,14 @@ package com.sirelon.discover.location.di
 
 import android.app.Application
 import com.sirelon.discover.location.feature.MainViewModule
+import com.sirelon.discover.location.feature.map.GoogleMapInteractor
+import com.sirelon.discover.location.feature.map.MapInteractor
 import com.sirelon.discover.location.feature.places.PopularPlacesRepository
 import com.sirelon.discover.location.feature.places.api.PlacesAPI
 import com.sirelon.discover.location.feature.places.categories.CategoriesRepository
 
 import com.sirelon.discover.location.network.createSimpleRetrofit
+import com.sirelon.discover.location.utils.ColorUtils
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -38,9 +41,13 @@ object Injector {
      * Create module for common (shared) definitions, which can be used in any features
      */
     private fun mainModule() = module {
+        single { ColorUtils(androidContext()) }
+
+        factory<MapInteractor> { GoogleMapInteractor() }
+
         single { createSimpleRetrofit(androidContext(), getProperty(PLACES_BASE_URL)) }
 
-        factory { get<Retrofit>().create(PlacesAPI::class.java) }
+        single { get<Retrofit>().create(PlacesAPI::class.java) }
 
         factory { PopularPlacesRepository(get()) }
         factory { CategoriesRepository(get()) }

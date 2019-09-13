@@ -18,13 +18,14 @@ import com.sirelon.discover.location.R
 import com.sirelon.discover.location.feature.base.BaseActivity
 import com.sirelon.discover.location.feature.location.Coordinates
 import com.sirelon.discover.location.feature.location.LocationListener
-import com.sirelon.discover.location.feature.map.GoogleMapInteractor
 import com.sirelon.discover.location.feature.map.MapInteractor
 import com.sirelon.discover.location.feature.places.categories.PlaceCategoryAdapter
 import com.sirelon.discover.location.feature.places.categories.selection.CategorySelectionDialog
 import com.sirelon.discover.location.feature.places.list.ListOfPlacesFragment
+import com.sirelon.discover.location.utils.ColorUtils
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.places_categories_screen.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val LOCATION_REQUEST_CODE = 121
@@ -33,9 +34,10 @@ private const val ACTION_CHANGE_VIEW_ID = 123;
 
 class MainActivity : BaseActivity() {
 
-    private val mapInteractor: MapInteractor = GoogleMapInteractor()
+    private val mapInteractor by inject<MapInteractor>()
 
     private val viewModel by viewModel<MainViewModule>()
+    private val colorUtils by inject<ColorUtils>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -136,7 +138,7 @@ class MainActivity : BaseActivity() {
     override fun getRootView() = activityRootContainer
 
     private fun setupCategories() {
-        val categoriesAdapter = PlaceCategoryAdapter {
+        val categoriesAdapter = PlaceCategoryAdapter(colorUtils) {
             val children = it.children ?: listOf(it)
             if (children.size > 1) {
                 CategorySelectionDialog.getInstance(it).show(supportFragmentManager, "Selection")
