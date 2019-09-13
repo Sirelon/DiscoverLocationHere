@@ -7,7 +7,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.sirelon.discover.location.R
 import com.sirelon.discover.location.feature.places.entites.Place
 
 /**
@@ -15,7 +14,7 @@ import com.sirelon.discover.location.feature.places.entites.Place
  *
  * Created on 2019-09-11 21:31 for DiscoverLocationHere.
  */
-private const val DEFAULT_ZOOM = 9.0F
+private const val DEFAULT_ZOOM = 15.0F
 
 class GoogleMapInteractor : OnMapReadyCallback, MapInteractor {
 
@@ -26,11 +25,8 @@ class GoogleMapInteractor : OnMapReadyCallback, MapInteractor {
     // In case when onLocationPermissionGranted method called before google map initialized
     private var postponedLocationEnabled = false
 
-    private var padding = 0
-
     override fun initWithActivity(activity: Activity): Fragment {
         mapFragment.getMapAsync(this)
-        padding = activity.resources.getDimensionPixelSize(R.dimen.peek_height) / 2
         return mapFragment
     }
 
@@ -61,8 +57,6 @@ class GoogleMapInteractor : OnMapReadyCallback, MapInteractor {
 
         googleMap.uiSettings?.setAllGesturesEnabled(true)
         googleMap.uiSettings?.isZoomControlsEnabled = true
-
-        googleMap.setPadding(0, padding, 0, 0)
 
         if (postponedLocationEnabled) {
             onLocationPermissionGranted()

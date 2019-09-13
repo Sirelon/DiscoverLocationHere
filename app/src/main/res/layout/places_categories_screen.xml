@@ -35,4 +35,11 @@
         app:spanCount="3"
         tools:listitem="@layout/place_category_item" />
 
+    <Button
+        android:id="@+id/actionResetAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:alpha="0.7"
+        android:text="Reset all" />
 </LinearLayout>

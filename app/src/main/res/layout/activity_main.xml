@@ -1,43 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activityRootContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/activityToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/Widget.AppCompat.Light.PopupMenu"
+            app:title="@string/app_name"
+            app:titleTextColor="@color/colorAccent" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingBottom="@dimen/peek_height" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/actionResetAll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:alpha="0.7"
-            android:text="Reset all" />
-
-        <Space
-            android:layout_width="@dimen/activity_horizontal_margin"
-            android:layout_height="0dp" />
-
-        <Button
-            android:id="@+id/actionShowAsList"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|start"
-            android:alpha="0.7"
-            android:text="Show As List" />
-    </LinearLayout>
-
+        android:paddingBottom="@dimen/peek_height"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <include layout="@layout/places_categories_screen" />
 

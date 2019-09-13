@@ -3,6 +3,9 @@ package com.sirelon.discover.location.feature
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -24,6 +27,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val LOCATION_REQUEST_CODE = 121
 private const val LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION
+private const val ACTION_CHANGE_VIEW_ID = 123;
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,6 +38,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        setSupportActionBar(activityToolbar)
+
         val mapFragment = mapInteractor.initWithActivity(this)
         replaceFragment(mapFragment, false)
 
@@ -59,9 +66,7 @@ class MainActivity : AppCompatActivity() {
             adapter = placesAdapter
         }
 
-        viewModel.categoriesLiveData.observe(this) {
-            placesAdapter.submitList(it)
-        }
+        viewModel.categoriesLiveData.observe(this, placesAdapter::submitList)
 
         viewModel.placesLiveData.observe(this) {
             it?.let { mapInteractor.showMarkers(it) }
@@ -72,21 +77,44 @@ class MainActivity : AppCompatActivity() {
             viewModel.resestSelection()
         }
 
-
         supportFragmentManager.addOnBackStackChangedListener {
-            if (currentFragmentIsList()) {
-                actionShowAsList.text = "Show as map"
-            } else {
-                actionShowAsList.text = "Show as list"
-            }
+            // Update toolbar menu each time, when we change fragment
+            invalidateOptionsMenu()
         }
-        actionShowAsList.setOnClickListener {
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menu ?: return super.onCreateOptionsMenu(menu)
+
+        val title: String
+        @DrawableRes
+        val icon: Int
+        if (currentFragmentIsList()) {
+            title = "Show as map"
+            icon = R.drawable.ic_map
+        } else {
+            title = "Show as list"
+            icon = R.drawable.ic_view_list
+        }
+
+        menu.add(0, ACTION_CHANGE_VIEW_ID, 0, title)
+            .setIcon(icon)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == ACTION_CHANGE_VIEW_ID) {
             if (currentFragmentIsList()) {
+                // Simple pop Our back stack, 'cause list view fragment is added to it
                 onBackPressed()
             } else {
+                // show list
                 replaceFragment(ListOfPlacesFragment(), true)
             }
         }
+
+        return super.onOptionsItemSelected(item)
     }
 
     private fun currentFragmentIsList() =
