@@ -24,8 +24,6 @@ private const val ZOOM_INCREMENT = 2.5f
 class GoogleMarkerManager(context: Context, map: GoogleMap) :
     ClusterManager<PlaceClusterMarker>(context, map) {
 
-    private val markers = hashSetOf<PlaceClusterMarker>()
-
     init {
         map.setOnCameraIdleListener(this)
         map.setOnMarkerClickListener(this)
@@ -57,35 +55,16 @@ class GoogleMarkerManager(context: Context, map: GoogleMap) :
 
 
     fun clear() {
-        markers.clear()
         clearItems()
         cluster()
     }
 
-
-    /**
-     * Funtion for set markers to map. It optimized to not add already markers which are already set
-     */
     fun setPlacesMarkerList(list: List<Place>) {
         val items = list.map { PlaceClusterMarker(it) }
-        if (markers.isEmpty()) {
-            addItems(items)
-            markers.addAll(items)
-        } else {
-            // get all items which is not contains already in a list
-            val itemsToAdd = items.filterNot { markers.contains(it) }
-
-            // Get all other items and remove markers
-            markers.subtract(itemsToAdd).forEach {
-                removeItem(it)
-            }
-            addItems(itemsToAdd)
-
-            markers.clear()
-            markers.addAll(items)
-        }
-
+        clearItems()
+        addItems(items)
         cluster()
+
     }
 }
 

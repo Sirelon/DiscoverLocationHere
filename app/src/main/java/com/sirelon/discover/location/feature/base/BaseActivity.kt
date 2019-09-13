@@ -1,16 +1,13 @@
 package com.sirelon.discover.location.feature.base
 
-import androidx.annotation.LayoutRes
+import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.observe
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 
-open class BaseFragment(
-    @LayoutRes
-    layoutId: Int
-) : Fragment(layoutId) {
+abstract class BaseActivity : AppCompatActivity() {
 
     // Just for avoid dublicates
     private var previousError: Throwable? = null
@@ -24,7 +21,7 @@ open class BaseFragment(
     // Child fragment can ovveride it and do some custom handler
     open fun errorHappened(error: Throwable?) {
         // Skip logic, if root view is null
-        val view = view ?: return
+        val view = getRootView() ?: return
         val message = error?.message ?: return
         // We don't want to show the same error again.
         if (previousError?.message == message) {
@@ -45,4 +42,5 @@ open class BaseFragment(
         snackbar.show()
     }
 
+    abstract fun getRootView(): View?
 }

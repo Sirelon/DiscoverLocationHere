@@ -5,19 +5,19 @@ import android.transition.Slide
 import android.transition.TransitionSet
 import android.view.Gravity
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sirelon.discover.location.R
 import com.sirelon.discover.location.feature.MainViewModule
-import com.sirelon.discover.location.feature.base.BaseFragment
 import kotlinx.android.synthetic.main.list_of_places_screen.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 /**
  * Created on 2019-09-12 23:30 for DiscoverLocationHere.
  */
-class ListOfPlacesFragment : BaseFragment(R.layout.list_of_places_screen) {
+class ListOfPlacesFragment : Fragment(R.layout.list_of_places_screen) {
 
     private val viewModel by sharedViewModel<MainViewModule>()
 

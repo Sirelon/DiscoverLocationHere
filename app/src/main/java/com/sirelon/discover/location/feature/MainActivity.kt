@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.annotation.DrawableRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -16,6 +15,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.sirelon.discover.location.R
+import com.sirelon.discover.location.feature.base.BaseActivity
 import com.sirelon.discover.location.feature.location.Coordinates
 import com.sirelon.discover.location.feature.location.LocationListener
 import com.sirelon.discover.location.feature.map.GoogleMapInteractor
@@ -31,7 +31,7 @@ private const val LOCATION_REQUEST_CODE = 121
 private const val LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION
 private const val ACTION_CHANGE_VIEW_ID = 123;
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private val mapInteractor: MapInteractor = GoogleMapInteractor()
 
@@ -40,8 +40,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         setSupportActionBar(activityToolbar)
+
+        subsribeForErrors(viewModel)
 
         val mapFragment = mapInteractor.initWithActivity(this)
         replaceFragment(mapFragment, false)
@@ -149,11 +150,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun getRootView() = activityRootContainer
+
     private fun onLocationPermissionGranted() {
         mapInteractor.onLocationPermissionGranted()
 
         var shouldFollowUser = true
 
+        // Subscribe for Location Changes
         val locationListener =
             LocationListener(this) {
 
