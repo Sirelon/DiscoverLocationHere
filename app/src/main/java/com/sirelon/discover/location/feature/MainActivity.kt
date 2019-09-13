@@ -20,8 +20,8 @@ import com.sirelon.discover.location.feature.location.Coordinates
 import com.sirelon.discover.location.feature.location.LocationListener
 import com.sirelon.discover.location.feature.map.GoogleMapInteractor
 import com.sirelon.discover.location.feature.map.MapInteractor
-import com.sirelon.discover.location.feature.places.categories.selection.CategorySelectionDialog
 import com.sirelon.discover.location.feature.places.categories.PlaceCategoryAdapter
+import com.sirelon.discover.location.feature.places.categories.selection.CategorySelectionDialog
 import com.sirelon.discover.location.feature.places.list.ListOfPlacesFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.places_categories_screen.*
@@ -58,6 +58,11 @@ class MainActivity : BaseActivity() {
 
         viewModel.placesLiveData.observe(this) {
             it?.let { mapInteractor.showMarkers(it) }
+        }
+
+        viewModel.goToCoordinatesLiveData.observe(this) {
+            // Move Camera to position
+            mapInteractor.showLocation(it.latitude, it.longitude)
         }
 
         actionResetAll.setOnClickListener {

@@ -34,6 +34,8 @@ class MainViewModule(
 
     val placesLiveData = MutableLiveData<List<Place>>()
 
+    val goToCoordinatesLiveData = MutableLiveData<Coordinates>()
+
     private var selectedCategories = mutableSetOf<PlaceCategory>()
 
     fun onLocationChange(location: Coordinates) {
@@ -77,5 +79,9 @@ class MainViewModule(
             val data = popularPlacesRepository.findPopularPlaces(coordinates, selectedCategories)
             placesLiveData.postValue(data)
         }
+    }
+
+    fun showPlace(place: Place) {
+        goToCoordinatesLiveData.postValue(Coordinates(place.latitude, place.longtude))
     }
 }

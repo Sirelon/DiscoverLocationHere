@@ -15,19 +15,15 @@ import kotlinx.android.synthetic.main.place_item.*
 /**
  * Created on 2019-09-12 16:57 for DiscoverLocationHere.
  */
-class PlacesAdapter : ListAdapter<Place, PlacesAdapter.PlaceViewHolder>(
-    PlaceDiffCallback
-) {
+class PlacesAdapter(private val onItemClick: (Place) -> Unit) :
+    ListAdapter<Place, PlacesAdapter.PlaceViewHolder>(PlaceDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        PlaceViewHolder(
-            (parent.inflate(
-                R.layout.place_item
-            ))
-        )
+        PlaceViewHolder((parent.inflate(R.layout.place_item)))
 
     override fun onBindViewHolder(holder: PlaceViewHolder, position: Int) {
         val place = getItem(position)
+        holder.itemView.setOnClickListener { onItemClick(place) }
         holder.placeDistance.text = "Distance ${place.distance}km"
         holder.placeName.text = place.title
         holder.placeIcon.loadUrl(place.imageUrl)

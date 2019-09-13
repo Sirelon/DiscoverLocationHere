@@ -24,7 +24,11 @@ class ListOfPlacesFragment : Fragment(R.layout.list_of_places_screen) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val placesAdapter = PlacesAdapter()
+        val placesAdapter = PlacesAdapter {
+            viewModel.showPlace(it)
+            // Hide fragment
+            activity?.onBackPressed()
+        }
 
         with(placesList) {
             itemAnimator = DefaultItemAnimator()
