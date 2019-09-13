@@ -1,6 +1,8 @@
 package com.sirelon.discover.location.feature.places.api
 
 import androidx.annotation.Keep
+import com.sirelon.discover.location.feature.location.Coordinates
+import com.sirelon.discover.location.feature.places.entites.PlaceCategory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -28,3 +30,13 @@ interface PlacesAPI {
         size: Int
     ): PlacesResponse
 }
+
+/**
+ * Just comma between lat and lng
+ */
+fun Coordinates.toApiParameter() = "$latitude,$longitude"
+
+/**
+ * Just comma between id
+ */
+fun Collection<PlaceCategory>.toApiParamter() = joinToString(",") { it.id }

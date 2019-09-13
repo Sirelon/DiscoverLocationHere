@@ -7,20 +7,27 @@ import androidx.lifecycle.viewModelScope
 import com.sirelon.discover.location.feature.base.BaseViewModel
 import com.sirelon.discover.location.feature.location.Coordinates
 import com.sirelon.discover.location.feature.places.PlacesRepository
+import com.sirelon.discover.location.feature.places.categories.CategoriesRepository
 import com.sirelon.discover.location.feature.places.entites.Place
 import com.sirelon.discover.location.feature.places.entites.PlaceCategory
 import kotlinx.coroutines.launch
 
 /**
+ *
  * Created on 2019-09-12 12:28 for DiscoverLocationHere.
  */
-class MainViewModule(private val placesRepository: PlacesRepository) : BaseViewModel() {
+class MainViewModule(
+    // For load categories
+    private val categoriesRepository: CategoriesRepository,
+    // For load places
+    private val placesRepository: PlacesRepository
+) : BaseViewModel() {
 
     private val locationTrigger = MutableLiveData<Coordinates>()
 
     val allCategoriesLiveData = locationTrigger.switchMap { location ->
         liveData(safetyIOContext) {
-            val data = placesRepository.loadCategories(location)
+            val data = categoriesRepository.loadCategories(location)
             emit(data)
         }
     }

@@ -4,6 +4,7 @@ import android.app.Application
 import com.sirelon.discover.location.feature.MainViewModule
 import com.sirelon.discover.location.feature.places.PlacesRepository
 import com.sirelon.discover.location.feature.places.api.PlacesAPI
+import com.sirelon.discover.location.feature.places.categories.CategoriesRepository
 
 import com.sirelon.discover.location.network.createSimpleRetrofit
 import org.koin.android.ext.koin.androidContext
@@ -27,7 +28,7 @@ object Injector {
             androidContext(application)
             modules(
                 listOf(
-                    commonModule()
+                    mainModule()
                 )
             )
         }
@@ -36,13 +37,14 @@ object Injector {
     /**
      * Create module for common (shared) definitions, which can be used in any features
      */
-    private fun commonModule() = module {
+    private fun mainModule() = module {
         single { createSimpleRetrofit(androidContext(), getProperty(PLACES_BASE_URL)) }
 
         factory { get<Retrofit>().create(PlacesAPI::class.java) }
 
         factory { PlacesRepository(get()) }
+        factory { CategoriesRepository(get()) }
 
-        viewModel { MainViewModule(get()) }
+        viewModel { MainViewModule(get(), get()) }
     }
 }
