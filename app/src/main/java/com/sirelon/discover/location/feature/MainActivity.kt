@@ -54,29 +54,7 @@ class MainActivity : BaseActivity() {
             onLocationPermissionDenied()
         }
 
-        val placesAdapter = PlaceCategoryAdapter {
-            val children = it.children ?: listOf(it)
-            if (children.size > 1) {
-                CategorySelectionDialog.getInstance(it).show(supportFragmentManager, "Selection")
-            } else {
-                // No sense to show dialog only for one category
-                viewModel.changeSelection(it, children)
-            }
-        }
-        with(categoriesList) {
-            itemAnimator = DefaultItemAnimator()
-            layoutManager = GridLayoutManager(context, 3)
-            adapter = placesAdapter
-        }
-
-        viewModel.categoriesLiveData.observe(this) {
-            if (it.isNullOrEmpty()) {
-                categoriesEmptyView.visibility = View.VISIBLE
-            } else {
-                categoriesEmptyView.visibility = View.GONE
-            }
-            placesAdapter.submitList(it)
-        }
+        setupCategories()
 
         viewModel.placesLiveData.observe(this) {
             it?.let { mapInteractor.showMarkers(it) }
@@ -151,6 +129,32 @@ class MainActivity : BaseActivity() {
     }
 
     override fun getRootView() = activityRootContainer
+
+    private fun setupCategories() {
+        val categoriesAdapter = PlaceCategoryAdapter {
+            val children = it.children ?: listOf(it)
+            if (children.size > 1) {
+                CategorySelectionDialog.getInstance(it).show(supportFragmentManager, "Selection")
+            } else {
+                // No sense to show dialog only for one category
+                viewModel.changeSelection(it, children)
+            }
+        }
+        with(categoriesList) {
+            itemAnimator = DefaultItemAnimator()
+            layoutManager = GridLayoutManager(context, 3)
+            adapter = categoriesAdapter
+        }
+
+        viewModel.categoriesLiveData.observe(this) {
+            if (it.isNullOrEmpty()) {
+                categoriesEmptyView.visibility = View.VISIBLE
+            } else {
+                categoriesEmptyView.visibility = View.GONE
+            }
+            categoriesAdapter.submitList(it)
+        }
+    }
 
     private fun onLocationPermissionGranted() {
         mapInteractor.onLocationPermissionGranted()
